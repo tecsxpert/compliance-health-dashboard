@@ -105,7 +105,7 @@ Return ONLY JSON like:
     return jsonify(answer)
 
 
-
+# ✅ NEW HEALTH ENDPOINT
 @app.route("/health", methods=["GET"])
 def health():
     uptime_seconds = time.time() - START_TIME
@@ -114,6 +114,7 @@ def health():
     if response_times:
         avg_time = sum(response_times) / len(response_times)
 
+    # ✅ Get ChromaDB document count
     try:
         chroma_count = chroma.collection.count()
     except:
