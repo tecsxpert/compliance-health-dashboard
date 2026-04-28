@@ -1,5 +1,5 @@
 from app import app
-
+from data import data
 def test_categorise():
     client = app.test_client()
 
@@ -13,13 +13,13 @@ def test_categorise():
 
     assert "category" in data
     assert "confidence" in data
-<<<<<<< HEAD
+
     assert "reasoning" in data
 
 
 if __name__ == "__main__":
     test_categorise()
     print("✅ Test Passed")
-=======
+
     assert "reasoning" in data
->>>>>>> d126a5b (Added ChromaDB + RAG pipeline)
+

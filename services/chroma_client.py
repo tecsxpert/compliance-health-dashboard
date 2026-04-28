@@ -9,7 +9,7 @@ class ChromaService:
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
 
         self.collection = self.client.get_or_create_collection(
-            name="compliance_knowledge"
+            name="health_compliance"
         )
 
     def add_documents(self, docs):

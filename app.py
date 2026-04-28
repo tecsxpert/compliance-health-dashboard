@@ -1,41 +1,44 @@
-
 from flask import Flask, request, jsonify
 from services.chroma_client import ChromaService
 from services.groq_client import GroqClient
+from services.cache_service import CacheService
 import time
 
 app = Flask(__name__)
 
 chroma = ChromaService()
 groq = GroqClient()
+cache = CacheService()
 
-# ✅ TRACKING VARIABLES
+# tracking
 START_TIME = time.time()
 response_times = []
-cache = {}
-cache_hits = 0
-cache_miss = 0
 
 
-# ✅ EXISTING API (DO NOT CHANGE LOGIC — only added tracking)
+# ✅ QUERY API
 @app.route("/query", methods=["POST"])
 def query():
-    global cache_hits, cache_miss
-
     start = time.time()
 
-    data = request.json
+    data = request.json or {}
     question = data.get("question")
+    refresh = data.get("refresh", False)
 
-    # ✅ Cache check
-    if question in cache:
-        cache_hits += 1
-        answer = cache[question]
+    if not question:
+        return jsonify({"error": "question required"}), 400
+
+    # cache check
+    if not refresh:
+        cached = cache.get(question)
     else:
-        cache_miss += 1
+        cached = None
 
+    if cached:
+        answer = cached["answer"]
+        docs = cached["sources"]
+    else:
         results = chroma.query(question)
-        docs = results["documents"][0]
+        docs = results["documents"][0][:3]
 
         context = "\n".join(docs)
 
@@ -48,29 +51,33 @@ Data:
 Question:
 {question}
 """
-
         answer = groq.generate(prompt)
 
-        # store in cache
-        cache[question] = answer
+        cache.set(question, {
+            "answer": answer,
+            "sources": docs
+        })
 
-    # ✅ Track response time
-    elapsed = time.time() - start
-    response_times.append(elapsed)
-
+    # track response time
+    response_times.append(time.time() - start)
     if len(response_times) > 10:
         response_times.pop(0)
 
     return jsonify({
-        "answer": answer
+        "answer": answer,
+        "sources": docs,
+        "cached": cached is not None
     })
 
 
-# ✅ NEW API (FOR YOUR TEST)
+# ✅ CATEGORISE API
 @app.route("/categorise", methods=["POST"])
 def categorise():
-    data = request.json
+    data = request.json or {}
     text = data.get("text")
+
+    if not text:
+        return jsonify({"error": "text required"}), 400
 
     results = chroma.query(text)
     docs = results["documents"][0]
@@ -94,60 +101,41 @@ Return ONLY JSON like:
 }}
 """
 
-    answer = groq.generate(prompt)
-
-    if isinstance(answer, str):
-        return jsonify({
-            "category": "Unknown",
-            "confidence": 0.0,
-            "reasoning": answer
-        })
+    answer = groq.generate(prompt, expect_json=True)
 
     return jsonify(answer)
 
 
-# ✅ NEW HEALTH ENDPOINT
+# ✅ HEALTH API
 @app.route("/health", methods=["GET"])
 def health():
-    uptime_seconds = time.time() - START_TIME
+    uptime = time.time() - START_TIME
 
-    avg_time = 0
-    if response_times:
-        avg_time = sum(response_times) / len(response_times)
+    avg_time = (
+        sum(response_times) / len(response_times)
+        if response_times else 0
+    )
 
-    # ✅ Get ChromaDB document count
     try:
         chroma_count = chroma.collection.count()
     except:
         chroma_count = 0
 
     return jsonify({
+        "status": "ok",
         "model": groq.model,
+        "uptime_seconds": int(uptime),
         "avg_response_time": round(avg_time, 3),
         "chroma_docs": chroma_count,
-        "uptime_seconds": int(uptime_seconds),
-        "cache": {
-            "hits": cache_hits,
-            "miss": cache_miss,
-            "size": len(cache)
-        }
+        "cache": cache.stats()
     })
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
-from flask import Flask
-from routes.categorise import categorise_bp
-
-app = Flask(__name__)
-
-# Register route
-app.register_blueprint(categorise_bp)
-
+# ✅ HOME
 @app.route("/")
 def home():
     return {"message": "AI Service Running"}
 
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)

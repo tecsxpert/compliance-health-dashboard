@@ -10,7 +10,7 @@ def test_chroma():
 
     assert "encrypt" in doc.lower()
 
-    print("✅ Test Passed")
+    print(" Test Passed")
     print("Top Result:", doc)
 
 
