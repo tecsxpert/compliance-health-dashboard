@@ -1,5 +1,4 @@
-# Ignore that folder
-compliance-health-dashboard/
+
 
 # Common Python ignores
 __pycache__/
