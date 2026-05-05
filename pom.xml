@@ -66,6 +66,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -79,6 +80,10 @@
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-starter-aop</artifactId>
        </dependency>
+	   <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
 		
 
        <dependency>
@@ -102,19 +107,35 @@
            <groupId>com.fasterxml.jackson.core</groupId>
            <artifactId>jackson-databind</artifactId>
        </dependency>
+	   <dependency>
+           <groupId>org.testcontainers</groupId>
+          <artifactId>junit-jupiter</artifactId>
+          <version>1.19.8</version>
+          <scope>test</scope>
+       </dependency>
+
+       <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>postgresql</artifactId>
+         <version>1.19.8</version>
+         <scope>test</scope>
+       </dependency>
+
+       
 		
 </dependencies>
 	
 
 	<build>
-		<plugins>
-		    <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                <skipTests>false</skipTests>
-               </configuration>
-            </plugin>
+	<plugins>
+		<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.2.5</version>
+            <configuration>
+             <forkCount>0</forkCount>   <!-- ✅ disables fork (MAIN FIX) -->
+          </configuration>
+        </plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
