@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -119,15 +120,18 @@ class ComplianceRecordServiceTest {
     }
 
     // ✅ 8. DELETE
-    @Test
-    void testDelete() {
-        when(repository.existsById(1L)).thenReturn(true);
-        doNothing().when(repository).deleteById(1L);
-
-        service.delete(1L);
-
-        verify(repository, times(1)).deleteById(1L);
-    }
+   @Test
+   void testDelete() {
+       ComplianceRecord record = new ComplianceRecord();
+       record.setId(1L);
+   
+       when(repository.findById(1L))
+               .thenReturn(Optional.of(record));
+   
+       service.delete(1L);
+   
+       verify(repository, times(1)).delete(record);
+   }
 
     // ✅ 9. FILTER BY STATUS
     @Test
@@ -140,13 +144,24 @@ class ComplianceRecordServiceTest {
     }
 
     // ✅ 10. SEARCH
-    @Test
-    void testSearch() {
-        when(repository.findByTitleContainingIgnoreCase("test"))
-                .thenReturn(List.of(sample()));
-
-        List<ComplianceRecord> result = service.search("test");
-
-        assertEquals(1, result.size());
-    }
+   @Test
+   void testSearch() {
+   
+       ComplianceRecord record = new ComplianceRecord();
+       record.setId(1L);
+       record.setTitle("Test Record");
+   
+       List<ComplianceRecord> records = List.of(record);
+   
+       when(repository.search(anyString()))
+               .thenReturn(records);
+   
+       List<ComplianceRecord> result = service.search("Test");
+   
+       assertNotNull(result);
+       assertEquals(1, result.size());
+       assertEquals("Test Record", result.get(0).getTitle());
+   
+       verify(repository, times(1)).search(anyString());
+   }
 }
