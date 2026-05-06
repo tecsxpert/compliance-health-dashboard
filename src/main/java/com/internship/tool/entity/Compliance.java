@@ -3,9 +3,18 @@ package com.internship.tool.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
-@Table(name = "compliance")
+@Table(
+    name = "compliance",
+    indexes = {
+        @Index(name = "idx_status", columnList = "status"),
+        @Index(name = "idx_title", columnList = "title"),
+        @Index(name = "idx_due_date", columnList = "due_date")
+    }
+)
 public class Compliance {
 
     @Id
@@ -13,8 +22,11 @@ public class Compliance {
     private Long id;
 
     private String title;
+
     private String description;
+
     private String status;
+
     private Integer score;
 
     @Column(name = "created_at")
@@ -27,22 +39,32 @@ public class Compliance {
     @JsonProperty("dueDate")
     private LocalDate dueDate;
 
-   @PrePersist
-public void prePersist() {
-    this.createdAt = LocalDateTime.now();
-    this.updatedAt = LocalDateTime.now();
-}
-@Column(name = "deleted")
-private Boolean deleted = false;
+    @Column(name = "deleted")
+    private Boolean deleted = false;
 
-@PreUpdate
-public void preUpdate() {
-    this.updatedAt = LocalDateTime.now();
-}
+    // =========================
+    // AUTO TIMESTAMP
+    // =========================
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // =========================
+    // CONSTRUCTOR
+    // =========================
     public Compliance() {
     }
 
-   
+    // =========================
+    // GETTERS AND SETTERS
+    // =========================
 
     public Long getId() {
         return id;
@@ -98,6 +120,14 @@ public void preUpdate() {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
     public Boolean getDeleted() {
