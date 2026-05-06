@@ -4,6 +4,7 @@ import com.internship.tool.entity.User;
 import com.internship.tool.repository.UserRepository;
 import com.internship.tool.service.JwtService;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
+@Profile("!test")
 public class AuthController {
 
     private final UserRepository userRepo;
