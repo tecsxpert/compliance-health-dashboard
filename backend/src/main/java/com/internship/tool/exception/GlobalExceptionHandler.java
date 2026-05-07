@@ -1,9 +1,12 @@
 package com.internship.tool.exception;
 
 import com.internship.tool.dto.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +14,7 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // ✅ 404 - Resource Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -84,9 +88,25 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // ✅ 400 - Database validation / constraint errors
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDataIntegrity(DataIntegrityViolationException ex) {
+
+        return new ResponseEntity<>(
+                ApiResponse.<Object>builder()
+                        .success(false)
+                        .message("Invalid data. Please check required fields and value formats.")
+                        .data(null)
+                        .timestamp(LocalDateTime.now())
+                        .build(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
     // ✅ 500 - Generic Error
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleGeneric(Exception ex) {
+        log.error("Unhandled exception", ex);
 
         return new ResponseEntity<>(
                 ApiResponse.<Object>builder()
