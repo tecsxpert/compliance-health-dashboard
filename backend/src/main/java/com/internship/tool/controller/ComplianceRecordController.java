@@ -34,32 +34,35 @@ public class ComplianceRecordController {
 
     @Operation(summary = "Create a new compliance record")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Record created successfully"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "201",
+                    description = "Record created successfully"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request data"
+            )
     })
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<ComplianceRecordDTO>> create(
-            @Valid @RequestBody ComplianceRecordDTO dto
-    ) {
+public ResponseEntity<String> create(
+        @Valid @RequestBody ComplianceRecordDTO dto
+) {
 
-        ComplianceRecord saved =
-                service.create(ComplianceRecordMapper.toEntity(dto));
+    service.create(ComplianceRecordMapper.toEntity(dto));
 
-        return new ResponseEntity<>(
-                ApiResponse.<ComplianceRecordDTO>builder()
-                        .success(true)
-                        .message("Record created successfully")
-                        .data(ComplianceRecordMapper.toDTO(saved))
-                        .build(),
-                HttpStatus.CREATED
-        );
-    }
+    return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body("Record created successfully");
+}
 
     // ================= GET ALL =================
 
     @Operation(summary = "Get all compliance records with pagination")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Records fetched successfully")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "Records fetched successfully"
+            )
     })
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<Page<ComplianceRecordDTO>>> getAll(
@@ -84,8 +87,14 @@ public class ComplianceRecordController {
 
     @Operation(summary = "Get compliance record by ID")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Record fetched successfully"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Record not found")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "Record fetched successfully"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "404",
+                    description = "Record not found"
+            )
     })
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ComplianceRecordDTO>> getById(
@@ -107,9 +116,18 @@ public class ComplianceRecordController {
 
     @Operation(summary = "Update compliance record")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Record updated successfully"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Record not found"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "Record updated successfully"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "404",
+                    description = "Record not found"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request data"
+            )
     })
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ComplianceRecordDTO>> update(
@@ -133,8 +151,14 @@ public class ComplianceRecordController {
 
     @Operation(summary = "Delete compliance record")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204", description = "Record deleted successfully"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Record not found")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "204",
+                    description = "Record deleted successfully"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "404",
+                    description = "Record not found"
+            )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(

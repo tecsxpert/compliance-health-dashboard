@@ -2,7 +2,7 @@ package com.internship.tool.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +15,7 @@ public class ComplianceRecordDTO {
     private String description;
     private String status;
     private Integer score;
-    private LocalDateTime dueDate;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private OffsetDateTime dueDate;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
 }

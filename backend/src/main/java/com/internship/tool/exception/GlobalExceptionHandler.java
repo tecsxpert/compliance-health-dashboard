@@ -3,6 +3,7 @@ package com.internship.tool.exception;
 import com.internship.tool.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +57,26 @@ public class GlobalExceptionHandler {
                 ApiResponse.<Object>builder()
                         .success(false)
                         .message(error)
+                        .data(null)
+                        .timestamp(LocalDateTime.now())
+                        .build(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    // ✅ 400 - Parse errors and unreadable request body
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMessageNotReadable(HttpMessageNotReadableException ex) {
+
+        String message = "Invalid request body";
+        if (ex.getCause() != null) {
+            message = ex.getCause().getMessage();
+        }
+
+        return new ResponseEntity<>(
+                ApiResponse.<Object>builder()
+                        .success(false)
+                        .message(message)
                         .data(null)
                         .timestamp(LocalDateTime.now())
                         .build(),
