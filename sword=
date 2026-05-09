@@ -1,0 +1,18 @@
+[33m1e4cf00[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Day 14 — Added DataLoader seeding 30 realistic demo compliance records
+[33mcf92bd8[m Delete .github/java-upgrade/20260507055209 directory
+[33md0db048[m[33m ([m[1;31morigin/appmod/java-upgrade-20260507055209[m[33m, [m[1;32mappmod/java-upgrade-20260507055209[m[33m)[m Day 13 — Completed Dockerized end-to-end system testing and bug investigation
+[33mc6490f3[m Step 3: Upgrade build and project runtime to Java 25 - Compile: succeeded
+[33mbc3d7f8[m Day 12 — Added Swagger OpenAPI annotations and DTO documentation
+[33mfefd16a[m Day 11 — Added JwtUtil and service tests with coverage improvements
+[33m77ebbe1[m Day 10 — Added JUnit 5 unit tests with Mockito for Service layer
+[33m95c6430[m Day 9 — Implemented File Upload/Download with validation and UUID storage
+[33m1c2a45c[m Week 2 Day 3 — Implemented Global Exception Handling using @ControllerAdvice
+[33m6ced734[m Week 2 Day 2 — Implemented AOP Logging with method tracing, exception handling, and timestamped logs
+[33m17c0932[m Week 2 Day 2 — Implemented AOP Logging for service layer with method tracing and exception handling
+[33md0406a8[m Day 5 — Implemented JWT Authentication with custom filter and secured endpoints
+[33m2b1576e[m Day 4 — Implemented REST Controller with pagination, DTO mapping, and standardized API responses
+[33m0323e73[m Day 3 — Implemented Service Layer, Validation, Exception Handling, and REST Controller
+[33m67f65c4[m Day 2 — Implemented JPA Entity with auditing and Repository layer with custom queries
+[33ma8ae242[m Remove DB_PASSWORD value from .env.example
+[33m4c56877[m Day 1 — Setup Spring Boot project, added dependencies, configured application.yml with env variables
+[33md3984ba[m Add README.md

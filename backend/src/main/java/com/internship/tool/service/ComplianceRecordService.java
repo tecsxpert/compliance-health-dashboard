@@ -13,10 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +27,7 @@ public class ComplianceRecordService {
     }
 
     // ✅ GET BY ID
-    @Cacheable(value = "compliance", key = "#id")
+    @Cacheable(value = "compliance")
     public ComplianceRecord getById(Long id) {
         System.out.println("Fetching from DB...");
         return repository.findById(id)
@@ -39,14 +35,14 @@ public class ComplianceRecordService {
     }
 
     // ✅ GET ALL (LIST)
-    @Cacheable(value = "compliance", key = "'all'")
+    @Cacheable(value = "compliance")
     public List<ComplianceRecord> getAll() {
         System.out.println("Fetching all from DB...");
         return repository.findAll();
     }
 
     // ✅ GET ALL PAGINATED
-    @Cacheable(value = "compliance", key = "#pageRequest.pageNumber + '-' + #pageRequest.pageSize")
+    @Cacheable(value = "compliance")
     public Page<ComplianceRecord> getAllPaginated(PageRequest pageRequest) {
         System.out.println("Fetching paginated from DB...");
         return repository.findAll(pageRequest);
@@ -74,21 +70,21 @@ public class ComplianceRecordService {
     }
 
     // ✅ FILTER BY STATUS
-    @Cacheable(value = "compliance", key = "'status-' + #status")
+    @Cacheable(value = "compliance")
     public List<ComplianceRecord> filterByStatus(String status) {
         System.out.println("Filtering by status from DB...");
         return repository.findByStatus(status);
     }
 
     // ✅ FILTER BY DATE RANGE
-    @Cacheable(value = "compliance", key = "'date-' + #start + '-' + #end")
+    @Cacheable(value = "compliance")
     public List<ComplianceRecord> filterByDateRange(LocalDateTime start, LocalDateTime end) {
         System.out.println("Filtering by date from DB...");
         return repository.findByDueDateBetween(start, end);
     }
 
     // ✅ SEARCH
-    @Cacheable(value = "compliance", key = "'search-' + #keyword")
+    @Cacheable(value = "compliance")
     public List<ComplianceRecord> search(String keyword) {
         System.out.println("Searching from DB...");
         return repository.findByTitleContainingIgnoreCase(keyword);
